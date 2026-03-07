@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 
 import { Container } from '@/components/Container';
-import { ScreenContent } from '@/components/ScreenContent';
+import { CardPreview } from './card-preview';
 
 export default function Details() {
   const { name } = useLocalSearchParams();
@@ -12,7 +12,7 @@ export default function Details() {
     <View className={styles.container}>
       <Stack.Screen options={{ title: 'Details' }} />
       <Container>
-        <ScreenContent path="screens/details.tsx" title={`Showing details for user ${name}`} />
+        <CardPreview />
       </Container>
     </View>
   );
