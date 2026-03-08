@@ -1,21 +1,40 @@
-import '../global.css';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import '@/global.css';
 
-import { Stack } from 'expo-router';
+import { SafeAreaListener, SafeAreaProvider } from 'react-native-safe-area-context';
+import { Uniwind } from 'uniwind';
 
-import { PortalHost } from '@rn-primitives/portal';
-import { ThemeProvider as NavigationThemeProvider } from '@react-navigation/native';
-import { NAV_THEME } from '@/lib/theme';
+import { StatusBar } from 'expo-status-bar';
+
 import { ThemeProvider, useTheme } from '@/lib/theme-context';
+import {
+  ThemeProvider as NavigationThemeProvider,
+  DefaultTheme,
+  DarkTheme,
+} from '@react-navigation/native';
+import { PortalHost } from '@rn-primitives/portal';
+import { Stack } from 'expo-router';
+import { useEffect } from 'react';
 
 function RootLayout() {
   const { colorScheme } = useTheme();
 
+  useEffect(() => {
+    Uniwind.setTheme(colorScheme);
+  }, [colorScheme]);
+
   return (
-    <NavigationThemeProvider value={NAV_THEME[colorScheme]}>
+    <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <SafeAreaProvider>
-        <Stack />
-        <PortalHost />
+        <SafeAreaListener
+          onChange={({ insets }) => {
+            Uniwind.updateInsets(insets);
+          }}>
+          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" />
+          </Stack>
+          <PortalHost />
+        </SafeAreaListener>
       </SafeAreaProvider>
     </NavigationThemeProvider>
   );

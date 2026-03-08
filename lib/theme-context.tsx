@@ -16,7 +16,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const systemColorScheme = useSystemColorScheme();
   const [themeMode, setThemeMode] = useState<ColorScheme>("system");
 
-  const activeColorScheme = themeMode === "system" ? (systemColorScheme ?? "light") : themeMode;
+  const activeColorScheme = themeMode === "system" ? ((systemColorScheme === "dark" || systemColorScheme === "light") ? systemColorScheme : "light") : themeMode;
 
   const setColorScheme = (scheme: ColorScheme) => {
     setThemeMode(scheme);
