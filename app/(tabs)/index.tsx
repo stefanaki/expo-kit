@@ -21,6 +21,11 @@ export default function HomeScreen() {
             <Text>Open Details</Text>
           </Button>
         </Link>
+        <Link href="/new-screen" asChild>
+          <Button size='lg' variant="outline">
+            <Text>Open New Screen</Text>
+          </Button>
+        </Link>
       </View>
     </ScrollView>
   );

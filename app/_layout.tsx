@@ -30,9 +30,12 @@ function RootLayout() {
             Uniwind.updateInsets(insets);
           }}>
           <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(tabs)" />
+
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(stack)" />
           </Stack>
+
           <PortalHost />
         </SafeAreaListener>
       </SafeAreaProvider>
