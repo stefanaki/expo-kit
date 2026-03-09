@@ -17,7 +17,7 @@ export default function HomeScreen() {
           Expo 55 scaffold with native tabs, Uniwind, and React Compiler enabled.
         </Text>
         <Link href="/details" asChild>
-          <Button>
+          <Button size='lg'>
             <Text>Open Details</Text>
           </Button>
         </Link>
