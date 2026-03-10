@@ -12,7 +12,6 @@ Copy `.env.example` to `.env.local` and fill in your values:
 | `EXPO_PUBLIC_OIDC_CLIENT_ID` | ✅ | Public client ID registered with your provider |
 | `EXPO_PUBLIC_OIDC_SCOPES` | optional | Space/comma-separated scopes. Default: `openid profile email` |
 | `EXPO_PUBLIC_OIDC_AUDIENCE` | optional | Audience for providers that require it (e.g. Auth0 APIs) |
-| `EXPO_PUBLIC_OIDC_END_SESSION_ENDPOINT` | optional | Override end-session URL if not in discovery document |
 
 ## Redirect URI allowlist
 
@@ -29,7 +28,7 @@ The scheme `my-expo-app` comes from the `expo.scheme` field in [app.json](app.js
 
 ## Provider setup notes
 
-- **Auth0**: Create a _Native_ application. Add the URIs above to "Allowed Callback URLs" and "Allowed Logout URLs".
+- **Auth0**: Create a _Native_ application. Add the URIs above to "Allowed Callback URLs".
 - **Keycloak**: Create a _public_ client with Standard Flow enabled. Add the URIs to "Valid Redirect URIs".
 - **Generic OIDC**: Ensure the provider supports Authorization Code + PKCE for public clients.
 
@@ -40,6 +39,6 @@ The following routes redirect to `/(auth)/login` when unauthenticated, and resto
 - `/(tabs)/details`
 - `/(stack)/new-screen`
 
-Logout is available from `/(tabs)/settings`. It performs a best-effort provider end-session and always clears local tokens.
+Logout is available from `/(tabs)/settings`. It always clears local tokens and performs best-effort token revocation when discovery data is available.
 
-> **Note on provider end-session**: If your provider does not advertise an `end_session_endpoint` in its discovery document and you have not set `EXPO_PUBLIC_OIDC_END_SESSION_ENDPOINT`, the app will perform a local-only logout. The user's provider session may remain active.
+> **Note**: Sign-out is local to the app. The user's provider session may remain active.

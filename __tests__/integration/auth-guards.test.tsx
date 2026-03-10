@@ -29,7 +29,7 @@ function GuardedDetails() {
     if (status === 'unauthenticated') {
       router.replace('/(auth)/login?returnTo=%2F(tabs)%2Fdetails' as any);
     }
-  }, [status]);
+  }, [router, status]);
 
   if (status !== 'authenticated') return null;
 
@@ -48,7 +48,7 @@ function GuardedNewScreen() {
     if (status === 'unauthenticated') {
       router.replace('/(auth)/login?returnTo=%2F(stack)%2Fnew-screen' as any);
     }
-  }, [status]);
+  }, [router, status]);
 
   if (status !== 'authenticated') return null;
 

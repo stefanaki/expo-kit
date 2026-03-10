@@ -101,7 +101,7 @@ describe('useAuthStore', () => {
       mockDeleteItem.mockResolvedValueOnce(undefined);
 
       await act(async () => {
-        // Pass null discovery to skip provider end-session calls.
+        // Pass null discovery to skip best-effort token revocation.
         await useAuthStore.getState().signOut(null);
       });
 

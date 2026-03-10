@@ -6,14 +6,13 @@
  *  - using the auth request/code-exchange flow
  *  - refreshing tokens
  *  - revoking tokens
- *  - building an end-session URL
  *  - web popup completion bootstrap (call once at app root)
  */
 
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 
-import { oidcConfig } from '@/config/oidc';
+import { oidcConfig } from '@/config/openid-connect';
 import type { StoredTokenPayload } from './types';
 import { toStoredPayload } from './types';
 
@@ -142,44 +141,5 @@ export async function revokeToken(
     );
   } catch {
     // Best-effort; ignore
-  }
-}
-
-/**
- * Build the provider end-session URL when supported.
- * Returns null if neither the override nor discovery endpoint is available.
- */
-export function buildEndSessionUrl(
-  idToken: string | undefined,
-  discovery: AuthSession.DiscoveryDocument,
-  postLogoutRedirectUri?: string
-): string | null {
-  const endpoint =
-    oidcConfig.endSessionEndpointOverride ||
-    (discovery as { end_session_endpoint?: string }).end_session_endpoint;
-
-  if (!endpoint) return null;
-
-  const url = new URL(endpoint);
-  if (idToken) url.searchParams.set('id_token_hint', idToken);
-  if (postLogoutRedirectUri)
-    url.searchParams.set('post_logout_redirect_uri', postLogoutRedirectUri);
-
-  return url.toString();
-}
-
-/**
- * Open the provider end-session URL in the browser (best-effort).
- */
-export async function performEndSession(
-  idToken: string | undefined,
-  discovery: AuthSession.DiscoveryDocument
-): Promise<void> {
-  const url = buildEndSessionUrl(idToken, discovery);
-  if (!url) return;
-  try {
-    await WebBrowser.openAuthSessionAsync(url, buildRedirectUri());
-  } catch {
-    // Best-effort
   }
 }

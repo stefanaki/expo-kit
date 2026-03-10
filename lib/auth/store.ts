@@ -1,7 +1,7 @@
 import * as AuthSession from 'expo-auth-session';
 import { create } from 'zustand';
 
-import { isTokenFresh, performEndSession, refreshTokens, revokeToken } from '@/lib/auth/oidc';
+import { isTokenFresh, refreshTokens, revokeToken } from '@/lib/auth/oidc';
 import { clearTokenPayload, loadTokenPayload, saveTokenPayload } from '@/lib/auth/storage';
 import { parseIdTokenClaims, toStoredPayload } from '@/lib/auth/types';
 import type { AuthStatus, StoredTokenPayload, UserClaims } from '@/lib/auth/types';
@@ -18,7 +18,7 @@ interface AuthState {
   /** Persist a newly obtained token payload and update state. */
   signIn: (payload: StoredTokenPayload) => Promise<void>;
 
-  /** Revoke tokens, perform provider end-session, clear storage, reset state. */
+  /** Revoke tokens (best-effort), clear storage, reset state. */
   signOut: (discovery?: AuthSession.DiscoveryDocument | null) => Promise<void>;
 
   /** Refresh the access token if it is near expiry. */
@@ -54,9 +54,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signOut: async (discovery) => {
     const { session } = get();
 
-    // Best-effort: provider end-session + token revocation
+    // Best-effort token revocation
     if (discovery && session) {
-      await performEndSession(session.idToken, discovery);
       if (session.refreshToken) {
         await revokeToken(session.refreshToken, 'refresh_token', discovery);
       }
