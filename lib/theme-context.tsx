@@ -36,7 +36,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ThemeContext.Provider
-      value={{ colorScheme: activeColorScheme, themeMode, setColorScheme, toggleColorScheme }}>
+      value={{
+        colorScheme: activeColorScheme,
+        themeMode,
+        setColorScheme,
+        toggleColorScheme,
+      }}>
       {children}
     </ThemeContext.Provider>
   );

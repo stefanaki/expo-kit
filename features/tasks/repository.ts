@@ -60,7 +60,9 @@ export function useUpdateTask() {
     },
     onSuccess: (updatedTask) => {
       void queryClient.invalidateQueries({ queryKey: TASKS_QUERY_KEY });
-      void queryClient.invalidateQueries({ queryKey: [...TASKS_QUERY_KEY, updatedTask.id] });
+      void queryClient.invalidateQueries({
+        queryKey: [...TASKS_QUERY_KEY, updatedTask.id],
+      });
     },
   });
 }

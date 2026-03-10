@@ -46,7 +46,6 @@ export function formatRelativeTime(
   return formatDistanceToNow(parsed, {
     addSuffix: true,
     locale: getDateFnsLocale(languageTag),
-    now,
   });
 }
 

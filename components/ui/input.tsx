@@ -9,7 +9,9 @@ function Input({ className, ...props }: TextInputProps & React.RefAttributes<Tex
         props.editable === false &&
           cn(
             'opacity-50',
-            Platform.select({ web: 'disabled:pointer-events-none disabled:cursor-not-allowed' })
+            Platform.select({
+              web: 'disabled:pointer-events-none disabled:cursor-not-allowed',
+            })
           ),
         Platform.select({
           web: cn(

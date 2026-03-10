@@ -2,12 +2,12 @@
 
 ## Stack
 
-| Tool | Role |
-|------|------|
-| [Jest 29](https://jestjs.io) | Test runner |
-| [jest-expo](https://github.com/expo/expo/tree/main/packages/jest-expo) | Expo preset, transforms RN modules |
-| [@testing-library/react-native](https://callstack.github.io/react-native-testing-library/) | Component queries and user-event helpers |
-| [expo-router/testing-library](https://docs.expo.dev/router/reference/testing/) | `renderRouter` for integration-level routing tests |
+| Tool                                                                                       | Role                                               |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| [Jest 29](https://jestjs.io)                                                               | Test runner                                        |
+| [jest-expo](https://github.com/expo/expo/tree/main/packages/jest-expo)                     | Expo preset, transforms RN modules                 |
+| [@testing-library/react-native](https://callstack.github.io/react-native-testing-library/) | Component queries and user-event helpers           |
+| [expo-router/testing-library](https://docs.expo.dev/router/reference/testing/)             | `renderRouter` for integration-level routing tests |
 
 ## Scripts
 
@@ -36,6 +36,7 @@ components/
 ```
 
 **Rules:**
+
 - Test files must end with `.test.ts(x)` or `.spec.ts(x)` to be collected.
 - Never put test files inside `app/` — all files there are treated as routes.
 - Use the root `__tests__/` for cross-cutting integration and store tests.
@@ -81,8 +82,12 @@ describe('<MyComponent />', () => {
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Slot } from 'expo-router';
 
-function MockLayout() { return <Slot />; }
-function MockScreen() { return <Text>content</Text>; }
+function MockLayout() {
+  return <Slot />;
+}
+function MockScreen() {
+  return <Text>content</Text>;
+}
 
 it('navigates to the right route', () => {
   renderRouter(
@@ -116,7 +121,9 @@ beforeEach(() => {
 
 it('hydrates to authenticated when a token exists', async () => {
   mockGetItem.mockResolvedValueOnce(JSON.stringify(makeTokenPayload()));
-  await act(async () => { await useAuthStore.getState().hydrate(); });
+  await act(async () => {
+    await useAuthStore.getState().hydrate();
+  });
   expect(useAuthStore.getState().status).toBe('authenticated');
 });
 ```
@@ -127,15 +134,15 @@ it('hydrates to authenticated when a token exists', async () => {
 
 ## Mocks (globally registered in `jest.setup.js`)
 
-| Module | Behaviour |
-|--------|-----------|
-| `expo-secure-store` | `getItemAsync` returns `null`; all functions are jest mocks |
-| `expo-location` | Returns a granted permission and `{ 0, 0 }` coordinates |
-| `expo-crypto` | `randomUUID` returns `'test-uuid-1234'`; `digestStringAsync` returns `'mocked-digest'` |
-| `@maplibre/maplibre-react-native` | All components render as empty native elements |
-| `react-native-safe-area-context` | Insets are all zero; `SafeAreaProvider`/`SafeAreaListener` pass children through |
-| `@rn-primitives/portal` | `PortalHost` is a no-op; `Portal` passes children through |
-| `uniwind` | `Uniwind.setTheme` and `Uniwind.updateInsets` are jest mocks |
+| Module                            | Behaviour                                                                              |
+| --------------------------------- | -------------------------------------------------------------------------------------- |
+| `expo-secure-store`               | `getItemAsync` returns `null`; all functions are jest mocks                            |
+| `expo-location`                   | Returns a granted permission and `{ 0, 0 }` coordinates                                |
+| `expo-crypto`                     | `randomUUID` returns `'test-uuid-1234'`; `digestStringAsync` returns `'mocked-digest'` |
+| `@maplibre/maplibre-react-native` | All components render as empty native elements                                         |
+| `react-native-safe-area-context`  | Insets are all zero; `SafeAreaProvider`/`SafeAreaListener` pass children through       |
+| `@rn-primitives/portal`           | `PortalHost` is a no-op; `Portal` passes children through                              |
+| `uniwind`                         | `Uniwind.setTheme` and `Uniwind.updateInsets` are jest mocks                           |
 
 Override any mock for a specific test with `mockResolvedValueOnce` / `mockReturnValueOnce`.
 

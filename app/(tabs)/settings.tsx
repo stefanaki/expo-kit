@@ -59,13 +59,19 @@ export default function SettingsScreen() {
             {name ? <Text selectable>{t('settings.name', { value: name })}</Text> : null}
             {email ? <Text selectable>{t('settings.email', { value: email })}</Text> : null}
             <Text selectable>
-              {t('settings.sampleNumber', { value: formatNumber(1234567.89, locale) })}
+              {t('settings.sampleNumber', {
+                value: formatNumber(1234567.89, locale),
+              })}
             </Text>
             <Text selectable>
-              {t('settings.sampleCurrency', { value: formatCurrency(2499.95, 'EUR', locale) })}
+              {t('settings.sampleCurrency', {
+                value: formatCurrency(2499.95, 'EUR', locale),
+              })}
             </Text>
             <Text selectable>
-              {t('settings.sampleDate', { value: formatDate(new Date(), undefined, locale) })}
+              {t('settings.sampleDate', {
+                value: formatDate(new Date(), undefined, locale),
+              })}
             </Text>
             <Button variant="outline" onPress={handleSignOut}>
               <Text>{t('common.signOut')}</Text>

@@ -6,3 +6,4 @@ android/
 ios/
 .agents/
 uniwind-types.d.ts
+cesconfig.jsonc
