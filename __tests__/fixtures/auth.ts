@@ -4,7 +4,7 @@
  * Use these to seed deterministic auth state in tests without relying on
  * real SecureStore or network calls.
  */
-import type { StoredTokenPayload } from '@/lib/auth/types';
+import type { StoredTokenPayload } from '@/lib/auth';
 
 /** Builds a fake base64url-encoded JWT with the given claims (no signature). */
 function makeJwt(claims: Record<string, unknown>): string {

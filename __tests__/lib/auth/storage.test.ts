@@ -6,7 +6,7 @@
  */
 import * as SecureStore from 'expo-secure-store';
 
-import { clearTokenPayload, loadTokenPayload, saveTokenPayload } from '@/lib/auth/storage';
+import { clearTokenPayload, loadTokenPayload, saveTokenPayload } from '@/lib/auth';
 import { makeTokenPayload } from '../../fixtures/auth';
 
 const mockGet = SecureStore.getItemAsync as jest.Mock;

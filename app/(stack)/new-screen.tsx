@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { Text } from '@/components/ui/text';
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/lib/auth';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { apiClient } from '@/lib/api';
 
 export default function NewScreen() {
   const { t } = useTranslation();
@@ -14,12 +15,8 @@ export default function NewScreen() {
 
   const { data, isLoading, isError } = useQuery<{ placeholder: string }>({
     queryKey: ['test-data'],
-    queryFn: () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({ placeholder: 'test data' });
-        }, 1000);
-      });
+    queryFn: async () => {
+      return (await apiClient.get('https://jsonplaceholder.typicode.com/todos/1')).data;
     },
   });
 

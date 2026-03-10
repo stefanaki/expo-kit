@@ -9,7 +9,7 @@ import { act } from '@testing-library/react-native';
 import { Slot } from 'expo-router';
 import { Text, View } from 'react-native';
 
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/lib/auth';
 import { makeTokenPayload } from '../fixtures/auth';
 
 function MockIndex() {

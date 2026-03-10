@@ -3,10 +3,9 @@ import { ScrollView, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { useOidcDiscovery } from '@/lib/auth/oidc';
+import { useOidcDiscovery, useAuthStore } from '@/lib/auth';
 import { formatCurrency, formatDate, formatNumber } from '@/lib/locale';
 import { useTheme } from '@/lib/theme-context';
-import { useAuthStore } from '@/store/auth-store';
 import { useTranslation } from 'react-i18next';
 
 export default function SettingsScreen() {

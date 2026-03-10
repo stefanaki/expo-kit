@@ -14,7 +14,7 @@ import { renderRouter, screen } from 'expo-router/testing-library';
 import { useEffect } from 'react';
 import { Text, View } from 'react-native';
 
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/lib/auth';
 import { makeTokenPayload } from '../fixtures/auth';
 
 // ─── Minimal inline replicas of the production guard logic ───────────────────

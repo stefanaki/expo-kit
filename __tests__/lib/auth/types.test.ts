@@ -4,7 +4,7 @@
  * Focuses on parseIdTokenClaims, which splits and base64url-decodes a JWT
  * payload without network calls or crypto.
  */
-import { parseIdTokenClaims, toStoredPayload } from '@/lib/auth/types';
+import { parseIdTokenClaims, toStoredPayload } from '@/lib/auth';
 
 // Minimal fixture helpers — intentionally not re-using fixtures/auth.ts so
 // these tests have zero external dependencies.

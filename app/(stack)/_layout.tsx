@@ -5,7 +5,7 @@ export default function StackLayout() {
   const { t } = useTranslation();
 
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="new-screen" options={{ title: t('stack.newScreenTitle') }} />
     </Stack>
   );

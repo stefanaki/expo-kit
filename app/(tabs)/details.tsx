@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 
 import LayerMarkersExample from '@/components/examples/layer-markers-example';
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/lib/auth';
 import { useTranslation } from 'react-i18next';
 
 export default function DetailsScreen() {

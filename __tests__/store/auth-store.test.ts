@@ -9,7 +9,7 @@
 import { act } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
 
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/lib/auth';
 import { makeTokenPayload, makeExpiredTokenPayload, MOCK_USER_CLAIMS } from '../fixtures/auth';
 
 const mockGetItem = SecureStore.getItemAsync as jest.Mock;

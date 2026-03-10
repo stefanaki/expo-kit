@@ -4,8 +4,7 @@ import { ActivityIndicator, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { exchangeCode, useOidcAuthRequest, useOidcDiscovery } from '@/lib/auth/oidc';
-import { useAuthStore } from '@/store/auth-store';
+import { exchangeCode, useOidcAuthRequest, useOidcDiscovery, useAuthStore } from '@/lib/auth';
 import { useTranslation } from 'react-i18next';
 
 export default function LoginScreen() {

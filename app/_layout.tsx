@@ -7,7 +7,7 @@ import { Uniwind } from 'uniwind';
 import { StatusBar } from 'expo-status-bar';
 
 import { queryClient } from '@/config/query-client';
-import { useAuthBootstrap } from '@/lib/auth/use-auth-bootstrap';
+import { useAuthBootstrap } from '@/lib/auth';
 import { useSystemLocale } from '@/lib/locale';
 import { ThemeProvider, useTheme } from '@/lib/theme-context';
 import {
@@ -39,8 +39,8 @@ function RootLayout() {
           <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
 
           <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(stack)" />
+            <Stack.Screen name="(tabs)" options={{ title: 'Tabs', headerShown: false }} />
+            <Stack.Screen name="(stack)" options={{ title: 'Stack' }} />
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           </Stack>
 

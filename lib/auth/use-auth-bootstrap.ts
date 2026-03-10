@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { maybeCompleteAuthSession } from '@/lib/auth/oidc';
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/lib/auth/store';
 
 // Close web popup on mount (no-op on native).
 maybeCompleteAuthSession();
