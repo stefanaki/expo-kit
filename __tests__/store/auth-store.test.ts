@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /**
  * Auth store unit tests — hydration and sign-in/sign-out flows.
  *
@@ -132,6 +133,59 @@ describe('useAuthStore', () => {
       });
 
       expect(mockSetItem).not.toHaveBeenCalled();
+    });
+
+    it('updates session when the token is expired and refresh succeeds', async () => {
+      const expiredPayload = makeExpiredTokenPayload();
+      useAuthStore.setState({
+        status: 'authenticated',
+        session: expiredPayload,
+        user: { sub: MOCK_USER_CLAIMS.sub },
+        error: null,
+      });
+
+      const freshPayload = makeTokenPayload({ accessToken: 'refreshed-access-token' });
+      const oidcModule = require('@/lib/auth/oidc');
+      jest.spyOn(oidcModule, 'isTokenFresh').mockReturnValueOnce(false);
+      jest.spyOn(oidcModule, 'refreshTokens').mockResolvedValueOnce(freshPayload);
+      mockSetItem.mockResolvedValueOnce(undefined);
+
+      const mockDiscovery = { tokenEndpoint: 'https://example.com/token' } as any;
+      await act(async () => {
+        await useAuthStore.getState().refreshIfNeeded(mockDiscovery);
+      });
+
+      expect(mockSetItem).toHaveBeenCalledTimes(1);
+      expect(useAuthStore.getState().session?.accessToken).toBe('refreshed-access-token');
+      expect(useAuthStore.getState().status).toBe('authenticated');
+
+      jest.restoreAllMocks();
+    });
+
+    it('signs out when the token is expired and refresh fails', async () => {
+      const expiredPayload = makeExpiredTokenPayload();
+      useAuthStore.setState({
+        status: 'authenticated',
+        session: expiredPayload,
+        user: { sub: MOCK_USER_CLAIMS.sub },
+        error: null,
+      });
+
+      const oidcModule = require('@/lib/auth/oidc');
+      jest.spyOn(oidcModule, 'isTokenFresh').mockReturnValueOnce(false);
+      jest.spyOn(oidcModule, 'refreshTokens').mockResolvedValueOnce(null);
+      mockDeleteItem.mockResolvedValueOnce(undefined);
+
+      const mockDiscovery = { tokenEndpoint: 'https://example.com/token' } as any;
+      await act(async () => {
+        await useAuthStore.getState().refreshIfNeeded(mockDiscovery);
+      });
+
+      expect(mockDeleteItem).toHaveBeenCalledTimes(1);
+      expect(useAuthStore.getState().status).toBe('unauthenticated');
+      expect(useAuthStore.getState().session).toBeNull();
+
+      jest.restoreAllMocks();
     });
   });
 });
