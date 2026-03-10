@@ -5,18 +5,22 @@ import { Uniwind } from 'uniwind';
 
 import { StatusBar } from 'expo-status-bar';
 
+import { queryClient } from '@/config/query-client';
+import { useAuthBootstrap } from '@/lib/auth/use-auth-bootstrap';
 import { ThemeProvider, useTheme } from '@/lib/theme-context';
 import {
-  ThemeProvider as NavigationThemeProvider,
-  DefaultTheme,
   DarkTheme,
+  DefaultTheme,
+  ThemeProvider as NavigationThemeProvider,
 } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 
 function RootLayout() {
   const { colorScheme } = useTheme();
+  useAuthBootstrap();
 
   useEffect(() => {
     Uniwind.setTheme(colorScheme);
@@ -34,6 +38,7 @@ function RootLayout() {
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="(stack)" />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           </Stack>
 
           <PortalHost />
@@ -45,8 +50,10 @@ function RootLayout() {
 
 export default function Layout() {
   return (
-    <ThemeProvider>
-      <RootLayout />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <RootLayout />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

@@ -6,13 +6,25 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_OIDC_ISSUER": "https://YOUR_ISSUER_URL",
+        "EXPO_PUBLIC_OIDC_CLIENT_ID": "YOUR_CLIENT_ID"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_OIDC_ISSUER": "https://YOUR_ISSUER_URL",
+        "EXPO_PUBLIC_OIDC_CLIENT_ID": "YOUR_CLIENT_ID"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_OIDC_ISSUER": "https://YOUR_ISSUER_URL",
+        "EXPO_PUBLIC_OIDC_CLIENT_ID": "YOUR_CLIENT_ID"
+      }
     }
   },
   "submit": {
