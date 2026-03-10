@@ -4,8 +4,11 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["*"]
-    }
+      "@/*": ["*"],
+      "@tests/*": ["__tests__/*"]
+    },
+    "types": ["jest", "@testing-library/react-native", "node", "expo-router/types/expect"]
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "uniwind-types.d.ts"]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "uniwind-types.d.ts"],
+  "exclude": ["node_modules", "coverage"]
 }
