@@ -2,7 +2,7 @@ import { Stack, useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 
-import LayerMarkersExample from '@/components/examples/layer-markers-example';
+import { LayerMarkersExample } from '@/features/map';
 import { useAuthStore } from '@/lib/auth';
 import { useTranslation } from 'react-i18next';
 
