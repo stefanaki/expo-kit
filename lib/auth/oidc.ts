@@ -59,7 +59,7 @@ export function useOidcAuthRequest(discovery: AuthSession.DiscoveryDocument | nu
       usePKCE: true,
       extraParams,
     },
-    discovery,
+    discovery
   );
 }
 
@@ -70,7 +70,7 @@ export function useOidcAuthRequest(discovery: AuthSession.DiscoveryDocument | nu
 export async function exchangeCode(
   code: string,
   request: AuthSession.AuthRequest,
-  discovery: AuthSession.DiscoveryDocument,
+  discovery: AuthSession.DiscoveryDocument
 ): Promise<StoredTokenPayload> {
   const redirectUri = buildRedirectUri();
   const tokenResponse = await AuthSession.exchangeCodeAsync(
@@ -78,11 +78,9 @@ export async function exchangeCode(
       clientId: oidcConfig.clientId,
       code,
       redirectUri,
-      extraParams: request.codeVerifier
-        ? { code_verifier: request.codeVerifier }
-        : undefined,
+      extraParams: request.codeVerifier ? { code_verifier: request.codeVerifier } : undefined,
     },
-    { tokenEndpoint: discovery.tokenEndpoint! },
+    { tokenEndpoint: discovery.tokenEndpoint! }
   );
   return toStoredPayload(tokenResponse);
 }
@@ -93,7 +91,7 @@ export async function exchangeCode(
  */
 export async function refreshTokens(
   payload: StoredTokenPayload,
-  discovery: AuthSession.DiscoveryDocument,
+  discovery: AuthSession.DiscoveryDocument
 ): Promise<StoredTokenPayload | null> {
   if (!payload.refreshToken || !discovery.tokenEndpoint) return null;
   try {
@@ -102,7 +100,7 @@ export async function refreshTokens(
         clientId: oidcConfig.clientId,
         refreshToken: payload.refreshToken,
       },
-      { tokenEndpoint: discovery.tokenEndpoint },
+      { tokenEndpoint: discovery.tokenEndpoint }
     );
     return toStoredPayload(tokenResponse);
   } catch {
@@ -116,7 +114,7 @@ export async function refreshTokens(
 export function isTokenFresh(payload: StoredTokenPayload, secondsMargin = 60): boolean {
   return AuthSession.TokenResponse.isTokenFresh(
     { expiresIn: payload.expiresIn, issuedAt: payload.issuedAt },
-    secondsMargin,
+    secondsMargin
   );
 }
 
@@ -127,7 +125,7 @@ export function isTokenFresh(payload: StoredTokenPayload, secondsMargin = 60): b
 export async function revokeToken(
   token: string,
   hint: 'access_token' | 'refresh_token',
-  discovery: AuthSession.DiscoveryDocument,
+  discovery: AuthSession.DiscoveryDocument
 ): Promise<void> {
   if (!discovery.revocationEndpoint) return;
   try {
@@ -140,7 +138,7 @@ export async function revokeToken(
             ? AuthSession.TokenTypeHint.AccessToken
             : AuthSession.TokenTypeHint.RefreshToken,
       },
-      { revocationEndpoint: discovery.revocationEndpoint },
+      { revocationEndpoint: discovery.revocationEndpoint }
     );
   } catch {
     // Best-effort; ignore
@@ -154,7 +152,7 @@ export async function revokeToken(
 export function buildEndSessionUrl(
   idToken: string | undefined,
   discovery: AuthSession.DiscoveryDocument,
-  postLogoutRedirectUri?: string,
+  postLogoutRedirectUri?: string
 ): string | null {
   const endpoint =
     oidcConfig.endSessionEndpointOverride ||
@@ -175,7 +173,7 @@ export function buildEndSessionUrl(
  */
 export async function performEndSession(
   idToken: string | undefined,
-  discovery: AuthSession.DiscoveryDocument,
+  discovery: AuthSession.DiscoveryDocument
 ): Promise<void> {
   const url = buildEndSessionUrl(idToken, discovery);
   if (!url) return;

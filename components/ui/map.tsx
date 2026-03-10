@@ -1,5 +1,5 @@
-import { useTheme } from "@/lib/theme-context";
-import { cn } from "@/lib/utils";
+import { useTheme } from '@/lib/theme-context';
+import { cn } from '@/lib/utils';
 import {
   Callout,
   Camera,
@@ -13,7 +13,7 @@ import {
   type CameraRef,
   type MapRef,
   type StyleSpecification,
-} from "@maplibre/maplibre-react-native";
+} from '@maplibre/maplibre-react-native';
 import {
   createContext,
   useContext,
@@ -22,19 +22,14 @@ import {
   useRef,
   useState,
   type ReactNode,
-} from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  Text,
-  View
-} from "react-native";
+} from 'react';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
 type MapContextValue = {
   mapRef: React.RefObject<MapRef | null>;
   cameraRef: React.RefObject<CameraRef | null>;
   isLoaded: boolean;
-  theme: "light" | "dark";
+  theme: 'light' | 'dark';
 };
 
 const MapContext = createContext<MapContextValue | null>(null);
@@ -42,14 +37,14 @@ const MapContext = createContext<MapContextValue | null>(null);
 function useMap() {
   const context = useContext(MapContext);
   if (!context) {
-    throw new Error("useMap must be used within a Map component");
+    throw new Error('useMap must be used within a Map component');
   }
   return context;
 }
 
 const defaultStyles = {
-  dark: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
-  light: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+  dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+  light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
 };
 
 type MapStyleOption = string | StyleSpecification;
@@ -72,7 +67,7 @@ type MapProps = {
 };
 
 const DefaultLoader = () => (
-  <View className="absolute inset-0 justify-center items-center bg-white/80">
+  <View className="absolute inset-0 items-center justify-center bg-white/80">
     <ActivityIndicator size="small" color="#999" />
   </View>
 );
@@ -89,12 +84,12 @@ function Map({
   const cameraRef = useRef<CameraRef | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const { colorScheme } = useTheme();
-  const theme = colorScheme === "dark" ? "dark" : "light";
+  const theme = colorScheme === 'dark' ? 'dark' : 'light';
 
   const mapStyle =
-    theme === "dark"
-      ? styles?.dark ?? defaultStyles.dark
-      : styles?.light ?? defaultStyles.light;
+    theme === 'dark'
+      ? (styles?.dark ?? defaultStyles.dark)
+      : (styles?.light ?? defaultStyles.light);
 
   const handleMapIdle = () => {
     if (!isLoaded) {
@@ -104,7 +99,7 @@ function Map({
 
   return (
     <MapContext.Provider value={{ mapRef, cameraRef, isLoaded, theme }}>
-      <View className={cn("flex-1 relative", className)}>
+      <View className={cn('relative flex-1', className)}>
         <MapLibreMap
           ref={mapRef}
           style={{ flex: 1 }}
@@ -112,15 +107,8 @@ function Map({
           onDidFinishLoadingMap={handleMapIdle}
           compass={false}
           logo={false}
-          attribution={false}
-        >
-          <Camera
-            ref={cameraRef}
-            zoom={zoom}
-            center={center}
-            easing="fly"
-            duration={1000}
-          />
+          attribution={false}>
+          <Camera ref={cameraRef} zoom={zoom} center={center} easing="fly" duration={1000} />
           {children}
         </MapLibreMap>
         {showLoader && !isLoaded && <DefaultLoader />}
@@ -130,14 +118,14 @@ function Map({
 }
 
 function anchorObjectToAnchorString(anchor: { x: number; y: number }) {
-  const horizontal = anchor.x <= 0.25 ? "left" : anchor.x >= 0.75 ? "right" : "center";
-  const vertical = anchor.y <= 0.25 ? "top" : anchor.y >= 0.75 ? "bottom" : "center";
+  const horizontal = anchor.x <= 0.25 ? 'left' : anchor.x >= 0.75 ? 'right' : 'center';
+  const vertical = anchor.y <= 0.25 ? 'top' : anchor.y >= 0.75 ? 'bottom' : 'center';
 
-  if (horizontal === "center" && vertical === "center") return "center";
-  if (horizontal === "center") return vertical;
-  if (vertical === "center") return horizontal;
+  if (horizontal === 'center' && vertical === 'center') return 'center';
+  if (horizontal === 'center') return vertical;
+  if (vertical === 'center') return horizontal;
 
-  return `${vertical}-${horizontal}` as "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  return `${vertical}-${horizontal}` as 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }
 
 type MarkerContextValue = {
@@ -170,17 +158,14 @@ function MapMarker({
 }: MapMarkerProps) {
   const id = useId();
 
-  const coordinate: [number, number] = 'coordinate' in positionProps && positionProps.coordinate
-    ? positionProps.coordinate
-    : [positionProps.longitude, positionProps.latitude];
+  const coordinate: [number, number] =
+    'coordinate' in positionProps && positionProps.coordinate
+      ? positionProps.coordinate
+      : [positionProps.longitude, positionProps.latitude];
 
   return (
     <MarkerContext.Provider value={{ coordinate }}>
-      <Marker
-        id={id}
-        lngLat={coordinate}
-        anchor={anchorObjectToAnchorString(anchor)}
-      >
+      <Marker id={id} lngLat={coordinate} anchor={anchorObjectToAnchorString(anchor)}>
         <Pressable onPress={onPress}>
           <View className="flex flex-row items-center justify-center">
             {children || <DefaultMarkerIcon />}
@@ -199,14 +184,19 @@ type MarkerContentProps = {
 
 function MarkerContent({ children, className }: MarkerContentProps) {
   return (
-    <View className={cn("items-center justify-center", className)}>
+    <View className={cn('items-center justify-center', className)}>
       {children || <DefaultMarkerIcon />}
     </View>
   );
 }
 
 function DefaultMarkerIcon() {
-  return <View className="w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow-md" style={{ elevation: 5 }} />;
+  return (
+    <View
+      className="h-4 w-4 rounded-full border-2 border-white bg-blue-500 shadow-md"
+      style={{ elevation: 5 }}
+    />
+  );
 }
 
 type MarkerPopupProps = {
@@ -219,7 +209,7 @@ type MarkerPopupProps = {
 function MarkerPopup({ children, className, title }: MarkerPopupProps) {
   return (
     <Callout title={title} className={className}>
-      <View className="p-3 min-w-[100px] max-w-[300px]">{children}</View>
+      <View className="min-w-[100px] max-w-[300px] p-3">{children}</View>
     </Callout>
   );
 }
@@ -228,30 +218,26 @@ type MarkerLabelProps = {
   children: ReactNode;
   className?: string;
   classNameText?: string;
-  position?: "top" | "bottom";
+  position?: 'top' | 'bottom';
 };
 
-function MarkerLabel({
-  children,
-  className,
-  classNameText,
-  position = "top",
-}: MarkerLabelProps) {
+function MarkerLabel({ children, className, classNameText, position = 'top' }: MarkerLabelProps) {
   return (
     <View
       className={cn(
-        "absolute left-1/2 translate-x-[-50%]",
-        position === "top" ? "mb-1 bottom-full" : "mt-1 top-full",
+        'absolute left-1/2 translate-x-[-50%]',
+        position === 'top' ? 'bottom-full mb-1' : 'top-full mt-1',
         className
-      )}
-    >
-      <Text className={cn("text-[10px] font-semibold text-foreground", classNameText)}>{children}</Text>
+      )}>
+      <Text className={cn('text-foreground text-[10px] font-semibold', classNameText)}>
+        {children}
+      </Text>
     </View>
   );
 }
 
 type MapControlsProps = {
-  position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   showZoom?: boolean;
   showLocate?: boolean;
   className?: string;
@@ -259,7 +245,7 @@ type MapControlsProps = {
 };
 
 function MapControls({
-  position = "bottom-right",
+  position = 'bottom-right',
   showZoom = true,
   showLocate = false,
   className,
@@ -311,7 +297,7 @@ function MapControls({
         onLocate(coords);
       }
     } catch (error) {
-      console.error("Error getting location:", error);
+      console.error('Error getting location:', error);
     } finally {
       setWaitingForLocation(false);
     }
@@ -320,16 +306,18 @@ function MapControls({
   if (!isLoaded) return null;
 
   const positionStyle = {
-    "top-left": { top: 8, left: 8 },
-    "top-right": { top: 8, right: 8 },
-    "bottom-left": { bottom: 8, left: 8 },
-    "bottom-right": { bottom: 8, right: 8 },
+    'top-left': { top: 8, left: 8 },
+    'top-right': { top: 8, right: 8 },
+    'bottom-left': { bottom: 8, left: 8 },
+    'bottom-right': { bottom: 8, right: 8 },
   }[position];
 
   return (
-    <View className={cn("absolute gap-1.5", className)} style={positionStyle}>
+    <View className={cn('absolute gap-1.5', className)} style={positionStyle}>
       {showZoom && (
-        <View className="rounded border border-gray-200 bg-white shadow-sm overflow-hidden" style={{ elevation: 2 }}>
+        <View
+          className="overflow-hidden rounded border border-gray-200 bg-white shadow-sm"
+          style={{ elevation: 2 }}>
           <ControlButton onPress={handleZoomIn} label="+">
             <Text className="text-lg font-semibold text-gray-700">+</Text>
           </ControlButton>
@@ -340,12 +328,10 @@ function MapControls({
         </View>
       )}
       {showLocate && (
-        <View className="rounded border border-gray-200 bg-white shadow-sm overflow-hidden" style={{ elevation: 2 }}>
-          <ControlButton
-            onPress={handleLocate}
-            label="📍"
-            disabled={waitingForLocation}
-          >
+        <View
+          className="overflow-hidden rounded border border-gray-200 bg-white shadow-sm"
+          style={{ elevation: 2 }}>
+          <ControlButton onPress={handleLocate} label="📍" disabled={waitingForLocation}>
             {waitingForLocation ? (
               <ActivityIndicator size="small" color="#666" />
             ) : (
@@ -373,18 +359,17 @@ function ControlButton({
     <Pressable
       onPress={onPress}
       disabled={disabled}
-      className="w-8 h-8 justify-center items-center active:bg-gray-100"
+      className="h-8 w-8 items-center justify-center active:bg-gray-100"
       style={disabled ? { opacity: 0.5 } : undefined}
       accessibilityLabel={label}
-      accessibilityRole="button"
-    >
+      accessibilityRole="button">
       {children}
     </Pressable>
   );
 }
 
 type MapRouteProps = {
-  coordinates: Array<[number, number]>;
+  coordinates: [number, number][];
   color?: string;
   width?: number;
   opacity?: number;
@@ -393,7 +378,7 @@ type MapRouteProps = {
 
 function MapRoute({
   coordinates,
-  color = "#4285F4",
+  color = '#4285F4',
   width = 3,
   opacity = 0.8,
   dashArray,
@@ -407,10 +392,10 @@ function MapRoute({
   }
 
   const shape = {
-    type: "Feature" as const,
+    type: 'Feature' as const,
     properties: {},
     geometry: {
-      type: "LineString" as const,
+      type: 'LineString' as const,
       coordinates,
     },
   };
@@ -425,8 +410,8 @@ function MapRoute({
           lineWidth: width,
           lineOpacity: opacity,
           ...(dashArray && { lineDasharray: dashArray }),
-          lineJoin: "round",
-          lineCap: "round",
+          lineJoin: 'round',
+          lineCap: 'round',
         }}
       />
     </GeoJSONSource>
@@ -479,7 +464,7 @@ function MapUserLocation({
           }
         }
       } catch (error) {
-        console.error("Error requesting location permissions:", error);
+        console.error('Error requesting location permissions:', error);
         if (mounted) {
           setHasPermission(false);
           setPermissionChecked(true);
@@ -514,15 +499,15 @@ function MapUserLocation({
 // Re-export LocationManager for permission handling
 export { LocationManager };
 
-  export {
-    Map,
-    MapControls,
-    MapMarker,
-    MapRoute,
-    MapUserLocation,
-    MarkerContent,
-    MarkerLabel,
-    MarkerPopup,
-    useCurrentPosition,
-    useMap
-  };
+export {
+  Map,
+  MapControls,
+  MapMarker,
+  MapRoute,
+  MapUserLocation,
+  MarkerContent,
+  MarkerLabel,
+  MarkerPopup,
+  useCurrentPosition,
+  useMap,
+};

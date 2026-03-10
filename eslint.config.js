@@ -21,7 +21,12 @@ module.exports = defineConfig([
     },
   },
   {
-    files: ['jest.setup.js', '**/__tests__/**/*.{js,ts,tsx}', '**/*.test.{js,ts,tsx}', '**/*.spec.{js,ts,tsx}'],
+    files: [
+      'jest.setup.js',
+      '**/__tests__/**/*.{js,ts,tsx}',
+      '**/*.test.{js,ts,tsx}',
+      '**/*.spec.{js,ts,tsx}',
+    ],
     languageOptions: {
       globals: {
         jest: 'readonly',

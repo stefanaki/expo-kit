@@ -1,14 +1,16 @@
-import { useRouter } from 'expo-router';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useOidcDiscovery } from '@/lib/auth/oidc';
+import { formatCurrency, formatDate, formatNumber } from '@/lib/locale';
 import { useTheme } from '@/lib/theme-context';
 import { useAuthStore } from '@/store/auth-store';
+import { useTranslation } from 'react-i18next';
 
 export default function SettingsScreen() {
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const { colorScheme, themeMode, setColorScheme, toggleColorScheme } = useTheme();
   const discovery = useOidcDiscovery();
@@ -23,37 +25,53 @@ export default function SettingsScreen() {
     router.replace('/(auth)/login' as any);
   };
 
+  const locale = i18n.resolvedLanguage;
+
+  const translatedMode = t(`settings.themeMode.${themeMode}`);
+  const translatedScheme = t(`settings.colorScheme.${colorScheme}`);
+
   return (
     <ScrollView
       className="bg-background flex-1"
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={{ padding: 16, gap: 12 }}>
-      <Stack.Screen options={{ title: 'Settings' }} />
+      <Stack.Screen options={{ title: t('settings.screenTitle') }} />
       <View className="gap-3">
-        <Text variant="h3">Appearance</Text>
-        <Text selectable>Current mode: {themeMode}</Text>
-        <Text selectable>Resolved scheme: {colorScheme}</Text>
+        <Text variant="h3">{t('settings.appearanceTitle')}</Text>
+        <Text selectable>{t('settings.currentMode', { mode: translatedMode })}</Text>
+        <Text selectable>{t('settings.resolvedScheme', { scheme: translatedScheme })}</Text>
         <Button onPress={toggleColorScheme}>
-          <Text>Toggle Theme</Text>
+          <Text>{t('settings.toggleTheme')}</Text>
         </Button>
         <Button variant="outline" onPress={() => setColorScheme('system')}>
-          <Text>Use System Theme</Text>
+          <Text>{t('settings.useSystemTheme')}</Text>
         </Button>
       </View>
 
       <View className="gap-3">
-        <Text variant="h3">Account</Text>
+        <Text variant="h3">{t('settings.accountTitle')}</Text>
         {status === 'authenticated' && user ? (
           <>
-            {user.name ? <Text selectable>Name: {user.name}</Text> : null}
-            {user.email ? <Text selectable>Email: {user.email}</Text> : null}
+            {user.name ? <Text selectable>{t('settings.name', { value: user.name })}</Text> : null}
+            {user.email ? (
+              <Text selectable>{t('settings.email', { value: user.email })}</Text>
+            ) : null}
+            <Text selectable>
+              {t('settings.sampleNumber', { value: formatNumber(1234567.89, locale) })}
+            </Text>
+            <Text selectable>
+              {t('settings.sampleCurrency', { value: formatCurrency(2499.95, 'EUR', locale) })}
+            </Text>
+            <Text selectable>
+              {t('settings.sampleDate', { value: formatDate(new Date(), undefined, locale) })}
+            </Text>
             <Button variant="outline" onPress={handleSignOut}>
-              <Text>Sign out</Text>
+              <Text>{t('common.signOut')}</Text>
             </Button>
           </>
         ) : (
           <Button onPress={() => router.push('/(auth)/login' as any)}>
-            <Text>Sign in</Text>
+            <Text>{t('common.signIn')}</Text>
           </Button>
         )}
       </View>

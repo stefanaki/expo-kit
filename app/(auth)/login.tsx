@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { exchangeCode, useOidcAuthRequest, useOidcDiscovery } from '@/lib/auth/oidc';
 import { useAuthStore } from '@/store/auth-store';
+import { useTranslation } from 'react-i18next';
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams<{ returnTo?: string }>();
   const returnTo = params.returnTo ?? '/(tabs)';
@@ -32,36 +34,30 @@ export default function LoginScreen() {
         .then(() => router.replace(returnTo as any))
         .catch((err) => {
           console.error('[OIDC] Code exchange failed', err);
-          useAuthStore.setState({ error: 'Authentication failed. Please try again.' });
+          useAuthStore.setState({ error: t('auth.signInFailed') });
         });
     } else if (response.type === 'error') {
-      useAuthStore.setState({ error: response.error?.message ?? 'Authentication failed.' });
+      useAuthStore.setState({ error: response.error?.message ?? t('auth.signInFailedShort') });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [response]);
+  }, [response, t]);
 
   const isLoading = !request || status === 'loading';
 
   return (
     <View className="bg-background flex-1 items-center justify-center gap-6 p-8">
       <View className="items-center gap-2">
-        <Text variant="h1">Sign in</Text>
-        <Text className="text-muted-foreground text-center">
-          Sign in with your organization account to continue.
-        </Text>
+        <Text variant="h1">{t('auth.signInTitle')}</Text>
+        <Text className="text-muted-foreground text-center">{t('auth.signInSubtitle')}</Text>
       </View>
 
-      {error ? (
-        <Text className="text-destructive text-center">{error}</Text>
-      ) : null}
+      {error ? <Text className="text-destructive text-center">{error}</Text> : null}
 
       {isLoading && !response ? (
         <ActivityIndicator />
       ) : (
-        <Button
-          disabled={!request}
-          onPress={() => promptAsync()}>
-          <Text>Sign in</Text>
+        <Button disabled={!request} onPress={() => promptAsync()}>
+          <Text>{t('common.signIn')}</Text>
         </Button>
       )}
     </View>

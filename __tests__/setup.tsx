@@ -40,8 +40,5 @@ export function renderWithProviders(
     ...options
   }: RenderOptions & { queryClient?: QueryClient } = {}
 ) {
-  return render(
-    <AllProviders queryClient={queryClient}>{ui}</AllProviders>,
-    options
-  );
+  return render(<AllProviders queryClient={queryClient}>{ui}</AllProviders>, options);
 }

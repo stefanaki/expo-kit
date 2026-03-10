@@ -1,12 +1,13 @@
-import { useRouter } from 'expo-router';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 
 import LayerMarkersExample from '@/components/examples/layer-markers-example';
 import { useAuthStore } from '@/store/auth-store';
+import { useTranslation } from 'react-i18next';
 
 export default function DetailsScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const status = useAuthStore((s) => s.status);
 
@@ -14,13 +15,13 @@ export default function DetailsScreen() {
     if (status === 'unauthenticated') {
       router.replace('/(auth)/login?returnTo=%2F(tabs)%2Fdetails' as any);
     }
-  }, [status]);
+  }, [router, status]);
 
   if (status !== 'authenticated') return null;
 
   return (
     <View className="bg-background flex-1">
-      <Stack.Screen options={{ title: 'Details' }} />
+      <Stack.Screen options={{ title: t('details.screenTitle') }} />
       <View className="flex-1">
         <LayerMarkersExample />
       </View>

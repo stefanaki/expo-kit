@@ -87,7 +87,7 @@ function setAuthenticated() {
 }
 
 const routes = {
-  '_layout': MockLayout,
+  _layout: MockLayout,
   '(tabs)/_layout': MockLayout,
   '(tabs)/details': GuardedDetails,
   '(stack)/_layout': MockLayout,
@@ -158,9 +158,7 @@ describe('Auth route guards', () => {
       expect(screen.toJSON()).toBeTruthy();
       expect(screen).toHavePathname('/login');
       // Search param is part of the URL — verify via the rendered pathname search
-      expect(screen).toHaveSearchParams(
-        expect.objectContaining({ returnTo: '/(tabs)/details' })
-      );
+      expect(screen).toHaveSearchParams(expect.objectContaining({ returnTo: '/(tabs)/details' }));
     });
   });
 });

@@ -41,10 +41,10 @@ export function parseIdTokenClaims(idToken: string): UserClaims | null {
     if (parts.length !== 3) return null;
     const payload = parts[1];
     // Base64url → base64 → JSON
-    const padded = payload.replace(/-/g, '+').replace(/_/g, '/').padEnd(
-      payload.length + ((4 - (payload.length % 4)) % 4),
-      '=',
-    );
+    const padded = payload
+      .replace(/-/g, '+')
+      .replace(/_/g, '/')
+      .padEnd(payload.length + ((4 - (payload.length % 4)) % 4), '=');
     const decoded = JSON.parse(atob(padded)) as Record<string, unknown>;
     if (typeof decoded.sub !== 'string') return null;
     return {

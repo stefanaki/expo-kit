@@ -29,9 +29,7 @@ export const MOCK_USER_CLAIMS = {
 } as const;
 
 /** A valid-looking token payload with a decodable ID token. */
-export function makeTokenPayload(
-  overrides: Partial<StoredTokenPayload> = {}
-): StoredTokenPayload {
+export function makeTokenPayload(overrides: Partial<StoredTokenPayload> = {}): StoredTokenPayload {
   return {
     accessToken: 'test-access-token',
     refreshToken: 'test-refresh-token',

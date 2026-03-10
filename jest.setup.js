@@ -4,8 +4,7 @@ jest.mock('react-native-safe-area-context', () => {
   return {
     SafeAreaProvider: ({ children }) => children,
     SafeAreaConsumer: ({ children }) => children(insets),
-    SafeAreaView: ({ children, ...props }) =>
-      React.createElement('View', props, children),
+    SafeAreaView: ({ children, ...props }) => React.createElement('View', props, children),
     SafeAreaListener: ({ children }) => children,
     useSafeAreaInsets: () => insets,
     useSafeAreaFrame: () => ({ x: 0, y: 0, width: 375, height: 812 }),
@@ -55,10 +54,34 @@ jest.mock('expo-crypto', () => ({
   randomUUID: jest.fn(() => 'test-uuid-1234'),
 }));
 
+jest.mock('expo-localization', () => ({
+  getLocales: jest.fn(() => [
+    {
+      languageTag: 'en-US',
+      languageCode: 'en',
+      regionCode: 'US',
+      textDirection: 'ltr',
+      decimalSeparator: '.',
+      digitGroupingSeparator: ',',
+      measurementSystem: 'us',
+      currencyCode: 'USD',
+      currencySymbol: '$',
+      temperatureUnit: 'fahrenheit',
+    },
+  ]),
+  getCalendars: jest.fn(() => [
+    {
+      calendar: 'gregory',
+      timeZone: 'UTC',
+      uses24hourClock: false,
+      firstWeekday: 1,
+    },
+  ]),
+}));
+
 jest.mock('@maplibre/maplibre-react-native', () => {
   const React = require('react');
-  const NullComponent = (name) => (props) =>
-    React.createElement(name, { testID: props.testID });
+  const NullComponent = (name) => (props) => React.createElement(name, { testID: props.testID });
   return {
     MapView: NullComponent('MapView'),
     Camera: NullComponent('Camera'),
@@ -70,3 +93,5 @@ jest.mock('@maplibre/maplibre-react-native', () => {
     setAccessToken: jest.fn(),
   };
 });
+
+require('@/config/i18n');
