@@ -21,8 +21,6 @@ You must register the following URIs as allowed redirect/callback URLs with your
 |---|---|
 | Native (dev build / production) | `my-expo-app://auth/callback` |
 | Expo Go | `exp://127.0.0.1:8081/--/auth/callback` |
-| Web (dev) | `http://localhost:8081/auth/callback` |
-| Web (prod) | `https://<your-domain>/auth/callback` |
 
 The scheme `my-expo-app` comes from the `expo.scheme` field in [app.json](app.json).
 

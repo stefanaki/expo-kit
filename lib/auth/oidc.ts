@@ -6,20 +6,13 @@
  *  - using the auth request/code-exchange flow
  *  - refreshing tokens
  *  - revoking tokens
- *  - web popup completion bootstrap (call once at app root)
  */
 
 import * as AuthSession from 'expo-auth-session';
-import * as WebBrowser from 'expo-web-browser';
 
 import { oidcConfig } from '@/config/openid-connect';
 import type { StoredTokenPayload } from './types';
 import { toStoredPayload } from './types';
-
-// Must be called before any auth request on web to close the popup.
-export function maybeCompleteAuthSession() {
-  WebBrowser.maybeCompleteAuthSession();
-}
 
 /** Build the redirect URI for the current platform. */
 export function buildRedirectUri(): string {
