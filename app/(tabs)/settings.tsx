@@ -1,9 +1,11 @@
+import { useAutoDiscovery } from 'expo-auth-session';
 import { Stack, useRouter } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { useOidcDiscovery, useAuthStore } from '@/lib/auth';
+import { oidcConfig } from '@/config/openid-connect';
+import { useAuthStore } from '@/lib/auth';
 import { formatCurrency, formatDate, formatNumber } from '@/lib/locale';
 import { useTheme } from '@/lib/theme-context';
 import { useTranslation } from 'react-i18next';
@@ -12,12 +14,15 @@ export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const { colorScheme, themeMode, setColorScheme, toggleColorScheme } = useTheme();
-  const discovery = useOidcDiscovery();
+  const discovery = useAutoDiscovery(oidcConfig.issuer);
   const { status, user, signOut } = useAuthStore((s) => ({
     status: s.status,
     user: s.user,
     signOut: s.signOut,
   }));
+
+  const name = typeof user?.name === 'string' ? user.name : undefined;
+  const email = typeof user?.email === 'string' ? user.email : undefined;
 
   const handleSignOut = async () => {
     await signOut(discovery);
@@ -51,10 +56,8 @@ export default function SettingsScreen() {
         <Text variant="h3">{t('settings.accountTitle')}</Text>
         {status === 'authenticated' && user ? (
           <>
-            {user.name ? <Text selectable>{t('settings.name', { value: user.name })}</Text> : null}
-            {user.email ? (
-              <Text selectable>{t('settings.email', { value: user.email })}</Text>
-            ) : null}
+            {name ? <Text selectable>{t('settings.name', { value: name })}</Text> : null}
+            {email ? <Text selectable>{t('settings.email', { value: email })}</Text> : null}
             <Text selectable>
               {t('settings.sampleNumber', { value: formatNumber(1234567.89, locale) })}
             </Text>

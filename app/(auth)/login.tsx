@@ -1,20 +1,35 @@
+import { useAutoDiscovery, useAuthRequest, ResponseType } from 'expo-auth-session';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { exchangeCode, useOidcAuthRequest, useOidcDiscovery, useAuthStore } from '@/lib/auth';
+import { oidcConfig } from '@/config/openid-connect';
+import { exchangeCode, useAuthStore } from '@/lib/auth';
 import { useTranslation } from 'react-i18next';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams<{ returnTo?: string }>();
+
   const returnTo = params.returnTo ?? '/(tabs)';
 
-  const discovery = useOidcDiscovery();
-  const [request, response, promptAsync] = useOidcAuthRequest(discovery);
+  const discovery = useAutoDiscovery(oidcConfig.issuer);
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId: oidcConfig.clientId,
+      scopes: oidcConfig.scopes,
+      redirectUri: oidcConfig.redirectUri,
+      responseType: ResponseType.Code,
+      usePKCE: true,
+      extraParams: {
+        ...(oidcConfig.audience && { audience: oidcConfig.audience }),
+      },
+    },
+    discovery
+  );
 
   const { signIn, error, status } = useAuthStore((s) => ({
     signIn: s.signIn,
@@ -22,7 +37,6 @@ export default function LoginScreen() {
     status: s.status,
   }));
 
-  // Handle auth response
   useEffect(() => {
     if (!response || !request || !discovery) return;
 
@@ -36,10 +50,11 @@ export default function LoginScreen() {
           useAuthStore.setState({ error: t('auth.signInFailed') });
         });
     } else if (response.type === 'error') {
-      useAuthStore.setState({ error: response.error?.message ?? t('auth.signInFailedShort') });
+      useAuthStore.setState({
+        error: response.error?.message ?? t('auth.signInFailedShort'),
+      });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [response, t]);
+  }, [discovery, request, response, returnTo, router, signIn, t]);
 
   const isLoading = !request || status === 'loading';
 

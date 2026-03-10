@@ -2,25 +2,32 @@
 
 This app uses provider-agnostic OpenID Connect (Authorization Code + PKCE) via `expo-auth-session`.
 
+## Auth module surface
+
+- Token persistence uses Expo `TokenResponseConfig` as the canonical stored token shape.
+- ID token claims are decoded via `parseIdTokenClaims` and kept as a generic object (`Record<string, unknown>`).
+- Auth request/discovery hooks are used directly in screens; `lib/auth/oidc.ts` keeps only thin shared token utilities.
+- Redirect URI is centralized in `oidcConfig.redirectUri`.
+
 ## Required environment variables
 
 Copy `.env.example` to `.env.local` and fill in your values:
 
-| Variable | Required | Description |
-|---|---|---|
-| `EXPO_PUBLIC_OIDC_ISSUER` | ✅ | OIDC issuer base URL (e.g. `https://accounts.example.com`) |
-| `EXPO_PUBLIC_OIDC_CLIENT_ID` | ✅ | Public client ID registered with your provider |
-| `EXPO_PUBLIC_OIDC_SCOPES` | optional | Space/comma-separated scopes. Default: `openid profile email` |
-| `EXPO_PUBLIC_OIDC_AUDIENCE` | optional | Audience for providers that require it (e.g. Auth0 APIs) |
+| Variable                     | Required | Description                                                   |
+| ---------------------------- | -------- | ------------------------------------------------------------- |
+| `EXPO_PUBLIC_OIDC_ISSUER`    | ✅       | OIDC issuer base URL (e.g. `https://accounts.example.com`)    |
+| `EXPO_PUBLIC_OIDC_CLIENT_ID` | ✅       | Public client ID registered with your provider                |
+| `EXPO_PUBLIC_OIDC_SCOPES`    | optional | Space/comma-separated scopes. Default: `openid profile email` |
+| `EXPO_PUBLIC_OIDC_AUDIENCE`  | optional | Audience for providers that require it (e.g. Auth0 APIs)      |
 
 ## Redirect URI allowlist
 
 You must register the following URIs as allowed redirect/callback URLs with your OIDC provider:
 
-| Platform | URI |
-|---|---|
-| Native (dev build / production) | `my-expo-app://auth/callback` |
-| Expo Go | `exp://127.0.0.1:8081/--/auth/callback` |
+| Platform                        | URI                                     |
+| ------------------------------- | --------------------------------------- |
+| Native (dev build / production) | `my-expo-app://auth/callback`           |
+| Expo Go                         | `exp://127.0.0.1:8081/--/auth/callback` |
 
 The scheme `my-expo-app` comes from the `expo.scheme` field in [app.json](app.json).
 

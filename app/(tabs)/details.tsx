@@ -13,7 +13,7 @@ export default function DetailsScreen() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.replace('/(auth)/login?returnTo=%2F(tabs)%2Fdetails' as any);
+      router.replace('/(auth)/login?returnTo=%2F(tabs)%2Fdetails');
     }
   }, [router, status]);
 

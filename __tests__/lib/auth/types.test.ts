@@ -4,7 +4,7 @@
  * Focuses on parseIdTokenClaims, which splits and base64url-decodes a JWT
  * payload without network calls or crypto.
  */
-import { parseIdTokenClaims, toStoredPayload } from '@/lib/auth';
+import { parseIdTokenClaims } from '@/lib/auth';
 
 // Minimal fixture helpers — intentionally not re-using fixtures/auth.ts so
 // these tests have zero external dependencies.
@@ -57,52 +57,9 @@ describe('parseIdTokenClaims', () => {
     expect(parseIdTokenClaims('header.!!!.sig')).toBeNull();
   });
 
-  it('returns null when sub is missing from the payload', () => {
+  it('returns decoded claims even when sub is missing', () => {
     const token = makeIdToken({ email: 'no-sub@example.com' });
 
-    expect(parseIdTokenClaims(token)).toBeNull();
-  });
-});
-
-describe('toStoredPayload', () => {
-  it('maps all TokenResponse fields to StoredTokenPayload', () => {
-    const fakeToken = {
-      accessToken: 'acc',
-      refreshToken: 'ref',
-      idToken: 'id',
-      expiresIn: 3600,
-      issuedAt: 1000000,
-      tokenType: 'Bearer',
-      scope: 'openid',
-    } as any;
-
-    const payload = toStoredPayload(fakeToken);
-
-    expect(payload.accessToken).toBe('acc');
-    expect(payload.refreshToken).toBe('ref');
-    expect(payload.idToken).toBe('id');
-    expect(payload.expiresIn).toBe(3600);
-    expect(payload.issuedAt).toBe(1000000);
-    expect(payload.tokenType).toBe('Bearer');
-    expect(payload.scope).toBe('openid');
-  });
-
-  it('stores undefined for optional fields that are null on the response', () => {
-    const fakeToken = {
-      accessToken: 'acc',
-      refreshToken: null,
-      idToken: null,
-      expiresIn: null,
-      issuedAt: 1000000,
-      tokenType: 'Bearer',
-      scope: null,
-    } as any;
-
-    const payload = toStoredPayload(fakeToken);
-
-    expect(payload.refreshToken).toBeUndefined();
-    expect(payload.idToken).toBeUndefined();
-    expect(payload.expiresIn).toBeUndefined();
-    expect(payload.scope).toBeUndefined();
+    expect(parseIdTokenClaims(token)).toEqual({ email: 'no-sub@example.com' });
   });
 });

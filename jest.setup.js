@@ -54,6 +54,14 @@ jest.mock('expo-crypto', () => ({
   randomUUID: jest.fn(() => 'test-uuid-1234'),
 }));
 
+jest.mock('expo-auth-session', () => {
+  const actual = jest.requireActual('expo-auth-session');
+  return {
+    ...actual,
+    makeRedirectUri: jest.fn(() => 'my-expo-app://auth/callback'),
+  };
+});
+
 jest.mock('expo-localization', () => ({
   getLocales: jest.fn(() => [
     {

@@ -5,6 +5,8 @@
  * Optional: EXPO_PUBLIC_OIDC_SCOPES, EXPO_PUBLIC_OIDC_AUDIENCE
  */
 
+import { makeRedirectUri } from 'expo-auth-session';
+
 const issuer = process.env.EXPO_PUBLIC_OIDC_ISSUER;
 const clientId = process.env.EXPO_PUBLIC_OIDC_CLIENT_ID;
 
@@ -22,6 +24,10 @@ export const oidcConfig = {
   clientId: clientId ?? '',
   scopes: rawScopes.split(/[\s,]+/).filter(Boolean),
   audience: process.env.EXPO_PUBLIC_OIDC_AUDIENCE,
+  redirectUri: makeRedirectUri({
+    scheme: 'my-expo-app',
+    path: 'auth/callback',
+  }),
 } as const;
 
 export type OidcConfig = typeof oidcConfig;

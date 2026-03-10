@@ -7,7 +7,7 @@ import { Uniwind } from 'uniwind';
 import { StatusBar } from 'expo-status-bar';
 
 import { queryClient } from '@/config/query-client';
-import { useAuthBootstrap } from '@/lib/auth';
+import { useAuthStore } from '@/lib/auth';
 import { useSystemLocale } from '@/lib/locale';
 import { ThemeProvider, useTheme } from '@/lib/theme-context';
 import {
@@ -22,8 +22,12 @@ import { useEffect } from 'react';
 
 function RootLayout() {
   const { colorScheme } = useTheme();
-  useAuthBootstrap();
+  const hydrate = useAuthStore((s) => s.hydrate);
   useSystemLocale();
+
+  useEffect(() => {
+    hydrate();
+  }, [hydrate]);
 
   useEffect(() => {
     Uniwind.setTheme(colorScheme);

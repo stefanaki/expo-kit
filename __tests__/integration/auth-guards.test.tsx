@@ -74,7 +74,12 @@ function MockLayout() {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function setUnauthenticated() {
-  useAuthStore.setState({ status: 'unauthenticated', session: null, user: null, error: null });
+  useAuthStore.setState({
+    status: 'unauthenticated',
+    session: null,
+    user: null,
+    error: null,
+  });
 }
 
 function setAuthenticated() {

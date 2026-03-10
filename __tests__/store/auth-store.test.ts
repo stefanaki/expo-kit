@@ -124,8 +124,15 @@ describe('useAuthStore', () => {
     });
 
     it('does nothing when the token is still fresh', async () => {
-      const payload = makeTokenPayload({ issuedAt: Math.floor(Date.now() / 1000) });
-      useAuthStore.setState({ status: 'authenticated', session: payload, user: null, error: null });
+      const payload = makeTokenPayload({
+        issuedAt: Math.floor(Date.now() / 1000),
+      });
+      useAuthStore.setState({
+        status: 'authenticated',
+        session: payload,
+        user: null,
+        error: null,
+      });
 
       const mockDiscovery = {} as any;
       await act(async () => {
@@ -144,13 +151,17 @@ describe('useAuthStore', () => {
         error: null,
       });
 
-      const freshPayload = makeTokenPayload({ accessToken: 'refreshed-access-token' });
+      const freshPayload = makeTokenPayload({
+        accessToken: 'refreshed-access-token',
+      });
       const oidcModule = require('@/lib/auth/oidc');
       jest.spyOn(oidcModule, 'isTokenFresh').mockReturnValueOnce(false);
       jest.spyOn(oidcModule, 'refreshTokens').mockResolvedValueOnce(freshPayload);
       mockSetItem.mockResolvedValueOnce(undefined);
 
-      const mockDiscovery = { tokenEndpoint: 'https://example.com/token' } as any;
+      const mockDiscovery = {
+        tokenEndpoint: 'https://example.com/token',
+      } as any;
       await act(async () => {
         await useAuthStore.getState().refreshIfNeeded(mockDiscovery);
       });
@@ -176,7 +187,9 @@ describe('useAuthStore', () => {
       jest.spyOn(oidcModule, 'refreshTokens').mockResolvedValueOnce(null);
       mockDeleteItem.mockResolvedValueOnce(undefined);
 
-      const mockDiscovery = { tokenEndpoint: 'https://example.com/token' } as any;
+      const mockDiscovery = {
+        tokenEndpoint: 'https://example.com/token',
+      } as any;
       await act(async () => {
         await useAuthStore.getState().refreshIfNeeded(mockDiscovery);
       });

@@ -4,7 +4,8 @@
  * Use these to seed deterministic auth state in tests without relying on
  * real SecureStore or network calls.
  */
-import type { StoredTokenPayload } from '@/lib/auth';
+
+import { TokenResponseConfig } from 'expo-auth-session';
 
 /** Builds a fake base64url-encoded JWT with the given claims (no signature). */
 function makeJwt(claims: Record<string, unknown>): string {
@@ -29,12 +30,14 @@ export const MOCK_USER_CLAIMS = {
 } as const;
 
 /** A valid-looking token payload with a decodable ID token. */
-export function makeTokenPayload(overrides: Partial<StoredTokenPayload> = {}): StoredTokenPayload {
+export function makeTokenPayload(
+  overrides: Partial<TokenResponseConfig> = {}
+): TokenResponseConfig {
   return {
     accessToken: 'test-access-token',
     refreshToken: 'test-refresh-token',
     idToken: makeJwt(MOCK_USER_CLAIMS),
-    tokenType: 'Bearer',
+    tokenType: 'bearer',
     issuedAt: Math.floor(Date.now() / 1000),
     expiresIn: 3600,
     scope: 'openid profile email',
@@ -44,8 +47,8 @@ export function makeTokenPayload(overrides: Partial<StoredTokenPayload> = {}): S
 
 /** A token payload that is expired (issued 2 hours ago, expires in 3600s). */
 export function makeExpiredTokenPayload(
-  overrides: Partial<StoredTokenPayload> = {}
-): StoredTokenPayload {
+  overrides: Partial<TokenResponseConfig> = {}
+): TokenResponseConfig {
   return makeTokenPayload({
     issuedAt: Math.floor(Date.now() / 1000) - 7200,
     expiresIn: 3600,

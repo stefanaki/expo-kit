@@ -52,6 +52,8 @@ import { Button } from '@/components/ui/button';
 
 ## Three Test Patterns
 
+Auth note: ID token claims in store are kept as a generic object (`Record<string, unknown>`). Assert specific keys only after runtime checks, matching app usage.
+
 ### 1. Component unit test (colocated)
 
 ```tsx
@@ -102,7 +104,7 @@ it('navigates to the right route', () => {
 // __tests__/store/some-store.test.ts
 import { act } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from '@/lib/auth';
 import { makeTokenPayload } from '../fixtures/auth';
 
 const mockGetItem = SecureStore.getItemAsync as jest.Mock;

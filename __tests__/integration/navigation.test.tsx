@@ -48,7 +48,11 @@ describe('Tab navigation', () => {
       useAuthStore.setState({
         status: 'authenticated',
         session: makeTokenPayload(),
-        user: { sub: 'test-user-id', name: 'Test User', email: 'test@example.com' },
+        user: {
+          sub: 'test-user-id',
+          name: 'Test User',
+          email: 'test@example.com',
+        },
         error: null,
       });
     });
